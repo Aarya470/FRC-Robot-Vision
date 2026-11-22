@@ -1,4 +1,4 @@
-# Mercury Vision
+# Robot Detction
 
 Object detection for FRC robots, made by Aaryan Roy on FRC Team 1089 Mercury. Use a Limelight, a PhotonVision camera, or any other camera to see **robots** and **game pieces**, and find out where they are and how far away.
 
