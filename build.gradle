@@ -1,0 +1,81 @@
+// Mercury Vision: an object detection library for FRC robots.
+// Build and test with:  ./gradlew build
+// Publish for a release: ./gradlew publish -PreleaseVersion=1.0.0   (writes to build/repo)
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'io.github.aarya470'
+version = project.findProperty('releaseVersion') ?: '0.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+    withJavadocJar()
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://frcmaven.wpi.edu/artifactory/release' }
+    maven { url = 'https://maven.photonvision.org/releases' }
+}
+
+def wpilibVersion = '2026.2.1'
+def photonVersion = 'v2026.3.4'
+
+dependencies {
+    // Teams already have WPILib, so it is not bundled
+    compileOnly "edu.wpi.first.wpilibj:wpilibj-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.ntcore:ntcore-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.hal:hal-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:$wpilibVersion"
+
+    // Only needed by teams with PhotonVision cameras, so it is not required
+    compileOnly "org.photonvision:photonlib-java:$photonVersion"
+    compileOnly "org.photonvision:photontargeting-java:$photonVersion"
+
+    testImplementation "edu.wpi.first.wpilibj:wpilibj-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.ntcore:ntcore-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.hal:hal-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:$wpilibVersion"
+    // Helper libraries WPILib's classes use at run time (robots already have these)
+    testRuntimeOnly "org.ejml:ejml-simple:0.44.0"
+    testRuntimeOnly "com.fasterxml.jackson.core:jackson-annotations:2.19.2"
+    testRuntimeOnly "com.fasterxml.jackson.core:jackson-core:2.19.2"
+    testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind:2.19.2"
+    testRuntimeOnly "us.hebi.quickbuf:quickbuf-runtime:1.4"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    failOnError = false
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'MercuryVision-java'
+            from components.java
+        }
+    }
+    repositories {
+        maven { url = layout.buildDirectory.dir('repo') }
+    }
+    // ./gradlew publishToMavenLocal also works, for building Reactive Autonomous Pathing locally
+}
