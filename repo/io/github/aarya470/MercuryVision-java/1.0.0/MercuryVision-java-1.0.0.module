@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.aarya470",
+    "module": "MercuryVision-java",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "MercuryVision-java-1.0.0.jar",
+          "url": "MercuryVision-java-1.0.0.jar",
+          "size": 27506,
+          "sha512": "f7dc9b6c0e1df29b5667fefa00c50148f8478a296fad68ba7837233a3c3c9dc3edc3a54eb2cf3550b35fa68594f51b668c56f197171ea606265ff0258486b5b7",
+          "sha256": "4c84fc3ca0767d1a40d8805e0e05c5de482e9935bc6c0d696db4bbb15d7c34cd",
+          "sha1": "ea4bf215032185519d07aa8d1db29a9783d1ac9d",
+          "md5": "4291230a7ff26a6831028a179b9bb49b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "MercuryVision-java-1.0.0.jar",
+          "url": "MercuryVision-java-1.0.0.jar",
+          "size": 27506,
+          "sha512": "f7dc9b6c0e1df29b5667fefa00c50148f8478a296fad68ba7837233a3c3c9dc3edc3a54eb2cf3550b35fa68594f51b668c56f197171ea606265ff0258486b5b7",
+          "sha256": "4c84fc3ca0767d1a40d8805e0e05c5de482e9935bc6c0d696db4bbb15d7c34cd",
+          "sha1": "ea4bf215032185519d07aa8d1db29a9783d1ac9d",
+          "md5": "4291230a7ff26a6831028a179b9bb49b"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "MercuryVision-java-1.0.0-sources.jar",
+          "url": "MercuryVision-java-1.0.0-sources.jar",
+          "size": 20642,
+          "sha512": "2280f97e744a697931fda65883afde9b7eb8b283098fed27cbf5690dce818afe700a10e8bc8f9a7bbad3b1fbe828ec939e1ae41f1db2ba4fd54a5d4c6f7023cd",
+          "sha256": "bcc78d191219c3938d8fa60f4f2646d788a51e19d2f4898da39a2121ddc300ac",
+          "sha1": "48093c4050501f958a582325d420d17c74f39f3d",
+          "md5": "27456575655bf317abd73df9372ad38d"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "MercuryVision-java-1.0.0-javadoc.jar",
+          "url": "MercuryVision-java-1.0.0-javadoc.jar",
+          "size": 124394,
+          "sha512": "106768172c7dc728238c27250d462f01871e89bbd1e729bb565bef7f2bb6c962f7a185871405100b007caf4862e4fb738944fbad99a44dc687eb2b57a95fdb5e",
+          "sha256": "094ba5eb3c0e981ca696a62ec1771a1720fb326e4dc3ea155b765216fa5bbca7",
+          "sha1": "b26778b355e426423c626433e851045cb3235554",
+          "md5": "4ec4d8064fd605ef07e0811849c51a36"
+        }
+      ]
+    }
+  ]
+}
