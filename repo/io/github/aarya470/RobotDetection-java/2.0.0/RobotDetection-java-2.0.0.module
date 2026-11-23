@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.aarya470",
+    "module": "RobotDetection-java",
+    "version": "2.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "RobotDetection-java-2.0.0.jar",
+          "url": "RobotDetection-java-2.0.0.jar",
+          "size": 19832,
+          "sha512": "63a3ab7f54687cb73a745d4e52cef8d3f61b80dc3cb7c90179a72437e6912b9843f6d3c223dc382bee747b984294b0d29b732aba5db15501604310f06d3b88b4",
+          "sha256": "378261bac6435bb0f8ed5a953533851a23df9517a3e937567d2468bd98dd232a",
+          "sha1": "3219c2a29b4ad50a2fb651ded24ab48c2e5d6d95",
+          "md5": "79f73ce6254a51b2a131fa8b0993fa05"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "RobotDetection-java-2.0.0.jar",
+          "url": "RobotDetection-java-2.0.0.jar",
+          "size": 19832,
+          "sha512": "63a3ab7f54687cb73a745d4e52cef8d3f61b80dc3cb7c90179a72437e6912b9843f6d3c223dc382bee747b984294b0d29b732aba5db15501604310f06d3b88b4",
+          "sha256": "378261bac6435bb0f8ed5a953533851a23df9517a3e937567d2468bd98dd232a",
+          "sha1": "3219c2a29b4ad50a2fb651ded24ab48c2e5d6d95",
+          "md5": "79f73ce6254a51b2a131fa8b0993fa05"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "RobotDetection-java-2.0.0-sources.jar",
+          "url": "RobotDetection-java-2.0.0-sources.jar",
+          "size": 12188,
+          "sha512": "8abdec1f1e778228056cd9c12e2aecf5e79ed1c5882cfc2926182b62fd00dacc3d12ee594cb058ee6bc09d5b4f85b674b7a52ffe95239c332a8bc4a8b520646c",
+          "sha256": "8e5eea7880d2cf485449a2e7903d2d57e730d231a9fa955763061edcbfb76f8b",
+          "sha1": "bf8626578438e82a6a8de45c7721f1dd88022e97",
+          "md5": "6fdbc845729ff74c2841d67ee72ad2f6"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "RobotDetection-java-2.0.0-javadoc.jar",
+          "url": "RobotDetection-java-2.0.0-javadoc.jar",
+          "size": 100016,
+          "sha512": "0e021a243132e8ad30b63c9e00382da41302add56075a9ca7c7ba7264f3103cdd87f299680b1aed331626045f8ca68a891ba4fbd3e05c75c0db5b3e946317739",
+          "sha256": "bcf18714ff0c3f61dd74f991732eb2132d72e17e1760b0af501c6d9ad3ce359a",
+          "sha1": "3db2b30bdc3fe1fec1d1ec7999d29b536a8ee713",
+          "md5": "887d74d28a207ce2a1295e0edfe56745"
+        }
+      ]
+    }
+  ]
+}
