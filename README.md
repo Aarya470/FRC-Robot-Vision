@@ -1,8 +1,8 @@
-# Robot Detction
+# Robot Detection
 
-Object detection for FRC robots, made by Aaryan Roy on FRC Team 1089 Mercury. Use a Limelight, a PhotonVision camera, or any other camera to see **robots** and **game pieces**, and find out where they are and how far away.
+See **robots** and **game pieces** with a Limelight or PhotonVision camera, and find out where they are. Made by Aaryan Roy on FRC Team 1089 Mercury.
 
-It works on its own. You don't need PathPlanner or any other library to use it.
+It works on its own: you don't need PathPlanner or any other library.
 
 ```java
 if (frontCamera.seesRobotWithin(1.5)) {
@@ -20,98 +20,66 @@ if (piece != null) {
 In WPILib VS Code, run **WPILib: Manage Vendor Libraries > Install new libraries (online)** and paste:
 
 ```
-https://aarya470.github.io/FRC-Robot-Vision/MercuryVision.json
+https://aarya470.github.io/FRC-Robot-Vision/RobotDetection.json
 ```
 
-For PhotonVision cameras, also install the [PhotonLib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html) vendor library. Its version must match the PhotonVision version on your coprocessor. Limelight and other cameras need nothing extra.
+For PhotonVision cameras, also install the [PhotonLib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html) vendor library (its version must match PhotonVision on your coprocessor). Limelights need nothing extra.
 
 ## Set up a camera
 
-Make one camera object per camera, once, for example as a field in `RobotContainer`:
+Make one `Camera` per camera, once, for example as a field in `RobotContainer`:
 
 ```java
-import com.mercury1089.vision.Camera;
+import com.mercury1089.detection.Camera;
+import com.mercury1089.detection.Sighting;
 
-Camera frontCamera = Camera.limelight("limelight-front")
+Camera frontCamera = Camera.limelight("limelight-front")   // or Camera.photonVision("CameraName")
     .mountedAt(0.30, 0.0, 0.75, 15, 0)
-    .usePose(drivetrain::getPose)
     .redRobotClasses(1)
     .blueRobotClasses(2)
-    .gamePieceClasses(0);
+    .gamePieceClasses(0)
+    .usePose(drivetrain::getPose);   // optional
 ```
 
-### 1. Pick the camera
+**`mountedAt(forward, left, height, tiltDown, facing)`**, measured from the robot's center on the floor:
 
-| Camera | How to make it | Needs |
-| --- | --- | --- |
-| Limelight with a neural detector pipeline | `Camera.limelight("limelight-name")` | nothing extra |
-| PhotonVision object detection | `Camera.photonVision("CameraName")` | PhotonLib. Calibrate the camera for the best distances. |
-| Any camera that gives angles | `Camera.fromAngles(() -> myTargets)` | a list of `new CameraTarget(classId, tx, ty)`: tx = degrees right of center, ty = degrees above center |
-| Anything that gives field positions | `Camera.fromFieldPositions(ThingType.ROBOT, () -> myPositions)` | `usePose(...)` |
-
-### 2. Say where it sits: `mountedAt(forward, left, height, tiltDown, facing)`
-
-Measure from the robot's center, on the floor:
-
-- **forward**: meters in front of the center (negative = behind)
-- **left**: meters left of the center (negative = right)
+- **forward**, **left**: meters from the center (negative = behind, right)
 - **height**: meters from the floor up to the lens
-- **tiltDown**: degrees the camera is tilted down (0 = level)
-- **facing**: degrees it points: 0 = forward, 90 = left, 180 = backward, -90 = right
+- **tiltDown**: degrees tilted down (0 = level)
+- **facing**: 0 = forward, 90 = left, 180 = backward, -90 = right
 
-`tools/camera_check.py` works out the tilt from one tape measurement and checks distances. Run `python tools/camera_check.py --help`.
+Mount the camera well above (or below) the middle of the things it looks for. A camera at the same height looks straight across at them, so it can't tell how far away they are. `tools/camera_check.py` checks your numbers with one tape measurement (`python tools/camera_check.py --help`).
 
-### 3. Tell it what the model's classes are
+**Classes.** Your detection model gives each thing a class number. Tell the camera which is which: `redRobotClasses(...)` and `blueRobotClasses(...)` if the model tells alliances apart, `robotClasses(...)` if it doesn't, and `gamePieceClasses(...)`. Classes you don't list are ignored. With no classes at all, it sees nothing.
 
-Your detection model gives each thing a class number. Tell the camera which is which:
+**Optional:**
 
-- `redRobotClasses(...)` and `blueRobotClasses(...)` for robots, if your model tells the alliances apart
-- `robotClasses(...)` for robots, if it doesn't
-- `gamePieceClasses(...)` for game pieces
-
-Classes you don't list are ignored. If you list none at all, everything counts, as `ThingType.OTHER`. OTHER things are never robots or game pieces, so `seesRobot()` and `seesGamePiece()` stay `false` (and Reactive Autonomous Pathing can't use the camera). OTHER things are placed using the game piece height. `hasClassesSet()` tells you whether any classes were listed.
-
-### 4. Optional
-
-- `usePose(drivetrain::getPose)`: sightings also get field positions. Frames arrive a little late, so each one is placed using where the robot was when the frame was taken.
-- `robotHeight(meters)` (default 0.4) and `gamePieceHeight(meters)` (default 0.08): how high the middle of each is. Change these if yours are very different. Mount the camera well above (or below) these heights: a camera near a target's height looks almost straight across at it, so distances get very inaccurate. Keep at least 15 cm between them.
+- `usePose(drivetrain::getPose)`: sightings also get field positions
+- `robotHeight(meters)` (default 0.4) and `gamePieceHeight(meters)` (default 0.08): how high the middle of each is
 - `maxDistance(meters)` (default 8): ignore anything farther
-- `maxAge(seconds)` (default 0.25): forget sightings older than this
-- `minConfidence(0 to 1)` (default 0.5): PhotonVision only. For a Limelight, set it on the Limelight's web page.
 
 ## Ask what it sees
 
 | Method | Gives |
 | --- | --- |
 | `seesSomething()`, `seesRobot()`, `seesGamePiece()` | `true` or `false` |
-| `seesRobotWithin(meters)`, `seesGamePieceWithin(meters)`, `seesSomethingWithin(meters)` | `true` if one is that close |
-| `getClosestRobot()`, `getClosestGamePiece()`, `getClosest()` | a `Sighting`, or `null` if there is none |
-| `getRobots()`, `getGamePieces()`, `getSightings()` | a list of `Sighting`s |
-| `getStatus()` | `"OK"`, or why nothing comes through |
+| `seesRobotWithin(meters)`, `seesGamePieceWithin(meters)` | `true` if one is that close |
+| `getClosestRobot()`, `getClosestGamePiece()` | a `Sighting`, or `null` if there is none |
+| `getRobots()`, `getGamePieces()` | a list of `Sighting`s |
+| `getStatus()` | `"OK"`, or why it sees nothing |
 
-A `Sighting` has:
-
-- `getDistanceMeters()`: how far from the robot's center
-- `getAngleDegrees()`: which way (0 ahead, 90 left, -90 right, 180 behind)
-- `getRobotRelativePosition()`: x forward, y left, in meters
-- `getFieldPosition()`: where on the field, or `null` without `usePose(...)`
-- `getType()`, `isRobot()`, `isGamePiece()`
-- `getColor()`: `RED`, `BLUE` or `UNKNOWN`
-- `getClassId()`
+A `Sighting` has `getDistanceMeters()`, `getAngleDegrees()` (0 ahead, 90 left), `getRobotRelativePosition()` (x forward, y left), `getFieldPosition()` (`null` without `usePose`), `isRobot()`, `isGamePiece()`, `getColor()` (`RED`, `BLUE` or `UNKNOWN`) and `getClassId()`.
 
 ## Commands and triggers
 
 ```java
-import com.mercury1089.vision.VisionCommands;
-
-// Triggers
 frontCamera.robotNearby(1.5).onTrue(Commands.print("Robot close!"));
 intakeCamera.gamePieceSeen().whileTrue(leds.showGreen());
 
-// Commands
-Command waitForPiece = VisionCommands.waitUntilSeesGamePiece(intakeCamera);
-Command waitForClearPath = VisionCommands.waitUntilNoRobotWithin(frontCamera, 2.0);
-Command getPiece = VisionCommands.driveToClosestGamePiece(
+Command waitForPiece = intakeCamera.waitUntilSeesGamePiece();
+Command waitForClearPath = frontCamera.waitUntilNoRobotWithin(2.0);
+
+Command getPiece = new DriveToGamePieceCommand(
         intakeCamera,
         drivetrain::driveRobotRelative,   // your method that takes robot-relative ChassisSpeeds
         2.0,                              // top speed, meters per second
@@ -121,52 +89,38 @@ Command getPiece = VisionCommands.driveToClosestGamePiece(
     .deadlineFor(yourIntakeCommand);      // runs your intake until it gets there
 ```
 
-`driveToClosestGamePiece` drives forward and turns, so it works on any drivetrain. It picks the closest piece and sticks with it. It ends when:
+`DriveToGamePieceCommand` drives forward and turns, so it works on any drivetrain. It sticks with the closest piece and stops when it gets there. If the piece goes under the bumper (out of view) while close and straight ahead, it creeps the rest of the way. If something could block the robot, add `.withTimeout(3)`.
 
-- the piece is within the arrive distance (about half your robot's length with bumpers), or
-- the camera lost the piece when it was close (under 1.2 m) and nearly straight ahead, usually because it went under the bumper. The robot then drives slowly straight on for as long as the rest of the way should take, then stops.
-- the camera lost the piece any other way for half a second.
+## Simulation
 
-With `usePose(...)` on the camera, it follows the piece by its field position, which keeps it on the same piece even when driving fast. If something could stop the robot reaching the piece, add a time limit with `.withTimeout(3)`.
+`Camera.simulated(() -> robotPositions, () -> gamePiecePositions)` makes a pretend camera that sees robots and game pieces where you say they are on the field. Give it `usePose(...)`.
 
-## See it on the dashboard
+## Dashboard and problems
 
 ```java
 SmartDashboard.putData("Front camera", frontCamera);
 ```
 
-This shows the status, how many robots and game pieces it sees, and the closest distances. If the status isn't `OK`, it says why, for example:
+This shows the status and how many robots and game pieces it sees. If the status isn't `OK`, it says why:
 
 | Status | What to do |
 | --- | --- |
-| `OK` | Working |
-| `OK (no classes set: everything is OTHER)` | It sees things, but you didn't list any classes, so nothing counts as a robot or game piece. Add `...Classes(...)` |
-| `No frames yet` | It hasn't been asked yet, or the camera hasn't sent anything |
 | `Sees nothing` | Working, but nothing is in view |
-| `No data from limelight-front` | Check the name, and that the camera is on and connected |
-| `No data from DetectionCam (check the name...)` | PhotonVision: check the name, and that PhotonLib's version matches PhotonVision's |
-| `No new frames from limelight-front` | Limelight: it is connected but has stopped sending frames. Check its pipeline is a neural detector and it is running |
-| `Needs the robot's pose: call usePose(...)` | `fromFieldPositions` cameras need `usePose(...)` |
-| `Low confidence 0.42` | Detections were below `minConfidence(...)` |
-| `Box bottom is above the horizon` | PhotonVision: check the height and tilt in `mountedAt(...)` |
+| `No data from limelight-front ...` | Check the name, and that the camera is on. For PhotonVision, also that PhotonLib's version matches |
+| `No new pictures from limelight-front` | The Limelight stopped sending pictures. Check it is running a neural detector pipeline |
+| `No classes set: ...` | Add `robotClasses(...)` or `gamePieceClasses(...)` |
 | `Not mounted: call mountedAt(...)` | Add `mountedAt(...)` |
-| `Ignored class 3` | The model sees class 3 but you didn't list it. Add it to the right `...Classes(...)` |
-| `Can't place a target` | Check the height and tilt in `mountedAt(...)` |
-| `Camera is level with the target's height` | The camera is at the same height as the middle of the targets, so distances can't be worked out. Mount it higher or lower. |
-
-## One camera, both robots and game pieces
-
-One camera can see both. List both kinds of classes on it, then ask `seesRobot()` or `seesGamePiece()`. Robots and game pieces each use their own height.
+| `Ignored class 3` | The model sees class 3 but you didn't list it |
+| `Can't place what it sees: ...` | Check the height and tilt in `mountedAt(...)` |
+| `Farther than maxDistance` | It only sees things farther than `maxDistance(...)` |
 
 ## Making a release (maintainers)
 
-Push a tag like `v1.0.0` (with a `## 1.0.0` section in `CHANGELOG.md`). The release workflow builds the library and puts it, with `MercuryVision.json`, on the `gh-pages` branch.
-
-The first time only: in the repo's **Settings > Pages**, set the source to **Deploy from a branch**, branch `gh-pages`, folder `/ (root)`. Then check that https://aarya470.github.io/FRC-Robot-Vision/MercuryVision.json opens.
+Add a `## X.Y.Z` section to `CHANGELOG.md`, then push a tag like `vX.Y.Z`. The release workflow builds the library and puts it, with `RobotDetection.json`, on GitHub Pages.
 
 ## Use it with PathPlanner
 
-[PathPlanner Backup Paths](https://github.com/Aarya470/pathplanner-backup-reactive-autos-paths) can use Mercury Vision cameras to wait, divert or pick up game pieces in the middle of an auto. Mercury Vision doesn't need it, though.
+[PathPlanner Backup Paths](https://github.com/Aarya470/pathplanner-backup-reactive-autos-paths) can use these cameras to wait, divert or pick up game pieces in the middle of an auto.
 
 ## License
 

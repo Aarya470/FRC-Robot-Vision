@@ -1,4 +1,4 @@
-package com.mercury1089.vision;
+package com.mercury1089.detection;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,7 +29,16 @@ import java.util.function.Consumer;
  * <p>While it can see the piece, it keeps going. If something can stop the robot reaching it (a
  * wall, another robot), add a time limit: {@code .withTimeout(3)}.
  *
- * <p>Easiest made with {@link VisionCommands#driveToClosestGamePiece}.
+ * <pre>{@code
+ * new DriveToGamePieceCommand(
+ *         intakeCamera,
+ *         drivetrain::driveRobotRelative, // your method that takes robot-relative ChassisSpeeds
+ *         2.0,                            // top speed, meters per second
+ *         false,                          // true if the intake is on the back
+ *         0.5,                            // stop when the piece is this close to the robot's center
+ *         drivetrain)
+ *     .deadlineFor(yourIntakeCommand);
+ * }</pre>
  */
 public class DriveToGamePieceCommand extends Command {
   /** How fast to turn for each radian the piece is off to the side, in radians per second */

@@ -1,6 +1,6 @@
-// Mercury Vision: an object detection library for FRC robots.
+// Robot Detection: see robots and game pieces with a camera, for FRC robots.
 // Build and test with:  ./gradlew build
-// Publish for a release: ./gradlew publish -PreleaseVersion=1.0.0   (writes to build/repo)
+// Publish for a release: ./gradlew publish -PreleaseVersion=2.0.0   (writes to build/repo)
 
 plugins {
     id 'java-library'
@@ -70,7 +70,7 @@ javadoc {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'MercuryVision-java'
+            artifactId = 'RobotDetection-java'
             from components.java
         }
     }

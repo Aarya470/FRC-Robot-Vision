@@ -1,4 +1,4 @@
-package com.mercury1089.vision;
+package com.mercury1089.detection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,11 +21,16 @@ public class DriveToGamePieceTest {
   static class TestCamera extends Camera {
     List<Translation2d> pieces = new ArrayList<>();
 
+    TestCamera() {
+      mountedAt(0, 0, 0, 0, 0);
+      gamePieceClasses(0);
+    }
+
     @Override
-    protected CameraFrame readFrame() {
-      CameraFrame frame = new CameraFrame(time);
+    Frame readFrame() {
+      Frame frame = new Frame(time);
       for (Translation2d piece : pieces) {
-        frame.addFoundTarget(new FoundTarget(0, ThingType.GAME_PIECE, piece));
+        frame.detections.add(new Detection(0, piece));
       }
       return frame;
     }

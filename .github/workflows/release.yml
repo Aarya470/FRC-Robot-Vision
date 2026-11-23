@@ -49,21 +49,28 @@ jobs:
         run: |
           mkdir -p site/repo
           cp -r build/repo/. site/repo/
-          cat > site/MercuryVision.json <<JSON
+          cat > site/RobotDetection.json <<JSON
           {
-              "fileName": "MercuryVision.json",
-              "name": "MercuryVision",
+              "fileName": "RobotDetection.json",
+              "name": "RobotDetection",
               "version": "${VERSION}",
-              "uuid": "50204a77-2ba9-4771-92b3-6e5c6cfebc4c",
+              "uuid": "69302fcf-8d64-4e4a-abe9-2343d663ce20",
               "frcYear": "2026",
               "mavenUrls": [
                   "${SITE_URL}/repo"
               ],
-              "jsonUrl": "${SITE_URL}/MercuryVision.json",
+              "jsonUrl": "${SITE_URL}/RobotDetection.json",
+              "conflictsWith": [
+                  {
+                      "uuid": "50204a77-2ba9-4771-92b3-6e5c6cfebc4c",
+                      "errorMessage": "Robot Detection replaces Mercury Vision. Remove MercuryVision.json from vendordeps.",
+                      "offlineFileName": "MercuryVision.json"
+                  }
+              ],
               "javaDependencies": [
                   {
                       "groupId": "io.github.aarya470",
-                      "artifactId": "MercuryVision-java",
+                      "artifactId": "RobotDetection-java",
                       "version": "${VERSION}"
                   }
               ],
@@ -71,13 +78,13 @@ jobs:
               "cppDependencies": []
           }
           JSON
-          python3 -m json.tool site/MercuryVision.json > /dev/null
+          python3 -m json.tool site/RobotDetection.json > /dev/null
           cat > site/index.html <<HTML
           <!DOCTYPE html>
           <html><head><meta charset="utf-8">
           <meta http-equiv="refresh" content="0; url=https://github.com/${GITHUB_REPOSITORY}">
-          <title>Mercury Vision</title></head>
-          <body><a href="https://github.com/${GITHUB_REPOSITORY}">Mercury Vision</a></body></html>
+          <title>Robot Detection</title></head>
+          <body><a href="https://github.com/${GITHUB_REPOSITORY}">Robot Detection</a></body></html>
           HTML
 
       - name: Publish to GitHub Pages
@@ -107,7 +114,7 @@ jobs:
           body = "## What's new\n\n" + "\n".join(notes).strip() + "\n\n"
           body += "## Install\n\n"
           body += "In WPILib VS Code, run **WPILib: Manage Vendor Libraries > Install new libraries (online)** and paste:\n\n"
-          body += "```\n" + site + "/MercuryVision.json\n```\n"
+          body += "```\n" + site + "/RobotDetection.json\n```\n"
           open("notes.md", "w", encoding="utf-8").write(body)
           PY
 
@@ -116,6 +123,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.v.outputs.version }}
         run: |
-          cp site/MercuryVision.json .
-          gh release create "v${VERSION}" --title "Mercury Vision ${VERSION}" --notes-file notes.md --verify-tag 2>/dev/null             || gh release edit "v${VERSION}" --title "Mercury Vision ${VERSION}" --notes-file notes.md
-          gh release upload "v${VERSION}" MercuryVision.json build/libs/*.jar --clobber
+          cp site/RobotDetection.json .
+          gh release create "v${VERSION}" --title "Robot Detection ${VERSION}" --notes-file notes.md --verify-tag 2>/dev/null             || gh release edit "v${VERSION}" --title "Robot Detection ${VERSION}" --notes-file notes.md
+          gh release upload "v${VERSION}" RobotDetection.json build/libs/*.jar --clobber
